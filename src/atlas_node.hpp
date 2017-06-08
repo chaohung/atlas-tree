@@ -10,24 +10,42 @@
 #define atlas_node_hpp
 
 #include <memory>
+#include <functional>
 
 namespace hsu {
 
-struct rect {
-    int x, y, width, height;
-};
-
-struct image {
-    int width, height;
-};
-
 class atlas_node : public std::enable_shared_from_this<atlas_node> {
 public:
-    atlas_node(int width, int height);
-    
-    std::shared_ptr<atlas_node const> insert(image const& img);
+    struct rect {
+        int x, y, width, height;
+    };
+
+public:
+    static std::shared_ptr<atlas_node> create_atlas_root(int width, int height);
+
+public:
+    std::shared_ptr<atlas_node const> insert(int img_width, int img_height);
+    void resize(int new_width, int new_height);
+    void clear();
+
+    void traverse(std::function<void(std::shared_ptr<atlas_node const>)> handler) const;
+    inline std::shared_ptr<atlas_node const> left_node() const { return left_node_; }
+    inline std::shared_ptr<atlas_node const> right_node() const { return right_node_; }
     inline rect const& rect() const { return rc_; }
     inline bool is_image() const { return is_image_; }
+
+private:
+    atlas_node(int width, int height);
+    std::shared_ptr<atlas_node> insert_impl(int img_width, int img_height);
+
+    template<typename T>
+    struct make_shared_helper : public T {
+        template<typename... Args>
+        explicit make_shared_helper(Args&&... args) : T(std::forward<Args>(args)...) {}
+    };
+
+public:
+    std::function<void(int,int)> resize_handler;
 
 private:
     std::shared_ptr<atlas_node> left_node_;
