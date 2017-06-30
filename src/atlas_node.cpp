@@ -46,7 +46,7 @@ void atlas_node::resize(int new_width, int new_height) {
         }
     }
     if (resize_handler) {
-        resize_handler(new_width, new_height);
+        resize_handler(tmp_rc.width, tmp_rc.height, new_width, new_height);
     }
 }
 

@@ -45,7 +45,7 @@ private:
     };
 
 public:
-    std::function<void(int,int)> resize_handler;
+    std::function<void(int old_width, int old_height, int new_width, int new_height)> resize_handler;
 
 private:
     std::shared_ptr<atlas_node> left_node_;
