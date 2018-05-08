@@ -14,15 +14,22 @@ std::shared_ptr<atlas_node> atlas_node::create_atlas_root(int width, int height)
     return std::make_shared<make_shared_helper<atlas_node> >(width, height);
 }
 
-std::shared_ptr<atlas_node const> atlas_node::insert(int img_width, int img_height) {
+std::shared_ptr<atlas_node const> atlas_node::insert(int img_width, int img_height, int margin) {
+    img_width += margin * 2;
+    img_height += margin * 2;
     auto img_node = insert_impl(img_width, img_height);
 
     if (!img_node || (rc_.width == img_width && rc_.height == img_height) ) {
         auto new_width = rc_.width + img_width;
         auto new_height = rc_.height + img_height;
         resize(new_width, new_height);
-        return insert(img_width, img_height);
+        return insert(img_width - margin * 2, img_height - margin * 2);
     }
+    img_node->rc_.x += margin;
+    img_node->rc_.y += margin;
+    img_node->rc_.width -= margin * 2;
+    img_node->rc_.height -= margin * 2;
+
     return img_node;
 }
 

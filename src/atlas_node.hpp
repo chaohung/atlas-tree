@@ -24,7 +24,7 @@ public:
     static std::shared_ptr<atlas_node> create_atlas_root(int width, int height);
 
 public:
-    std::shared_ptr<atlas_node const> insert(int img_width, int img_height);
+    std::shared_ptr<atlas_node const> insert(int img_width, int img_height, int margin = 0);
     void resize(int new_width, int new_height);
     void clear();
 
