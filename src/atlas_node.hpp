@@ -27,12 +27,16 @@ public:
     std::shared_ptr<atlas_node const> insert(int img_width, int img_height, int margin = 0);
     void resize(int new_width, int new_height);
     void clear();
+    void remove(std::shared_ptr<atlas_node const> node);
 
     void traverse(std::function<void(std::shared_ptr<atlas_node const>)> handler) const;
     inline std::shared_ptr<atlas_node const> left_node() const { return left_node_; }
     inline std::shared_ptr<atlas_node const> right_node() const { return right_node_; }
     inline rect const& rect() const { return rc_; }
     inline bool is_image() const { return is_image_; }
+    inline bool is_activated() const {
+        return is_image_ || left_node_ || right_node_;
+    }
 
 private:
     atlas_node(int width, int height);
@@ -48,6 +52,7 @@ public:
     std::function<void(int old_width, int old_height, int new_width, int new_height)> resize_handler;
 
 private:
+    std::weak_ptr<atlas_node> parent_node_;
     std::shared_ptr<atlas_node> left_node_;
     std::shared_ptr<atlas_node> right_node_;
     struct rect rc_;
